@@ -1,4 +1,4 @@
-morze
-=====
+Text to morse sound
+===================
 
-bibikalka
+stdin use
