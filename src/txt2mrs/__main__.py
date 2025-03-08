@@ -1,7 +1,7 @@
 """Text to morse code sound converter
 MIT License
 
-Copyright (c) 2024 Roman Babenko
+Copyright (c) 2025 Roman Babenko
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ from typing import Optional
 from txt2mrs import Txt2Mrs
 
 
-
 def get_int(val) -> Optional[int]:
     with contextlib.suppress(Exception):
         return int(val)
@@ -37,7 +36,7 @@ def get_int(val) -> Optional[int]:
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-def main(argv) -> int:
+def main() -> int:
     """main function
 
     Args:
@@ -48,23 +47,23 @@ def main(argv) -> int:
     """
     error = 1
 
-    speed = get_int(argv[1] if 2 < len(argv) else None) or 100
-    tone = get_int(argv[2] if 3 < len(argv) else None) or 500
+    speed = get_int(sys.argv[1] if 2 < len(sys.argv) else None) or 100
+    tone = get_int(sys.argv[2] if 3 < len(sys.argv) else None) or 500
 
-    txt2mrs=Txt2Mrs(speed,tone)
+    txt2mrs = Txt2Mrs(speed, tone)
 
-    if get_int(argv[-1]) and 4 > len(argv):
+    if get_int(sys.argv[-1]) and 4 > len(sys.argv):
         try:
             for line in sys.stdin:
                 print(f'Input : {line}')
         except KeyboardInterrupt as sigint:
-            error=0
+            error = 0
     else:
-        message = argv[-1]
+        message = sys.argv[-1]
         print(f'message : {message}')
         for i in message:
             txt2mrs.morse(ord(i))
-        error=0
+        error = 0
 
     if 0 != error:
         print("txt2mrs <speed> <tone> [message]")
@@ -75,5 +74,4 @@ def main(argv) -> int:
 
 
 if __name__ == "__main__":
-
-    sys.exit(main(sys.argv))
+    sys.exit(main())
