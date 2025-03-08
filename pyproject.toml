@@ -3,7 +3,7 @@ name = "txt2mrs"
 dynamic = ["version"]
 description = "txt2mrs encoding/decoding library"
 authors = [{ name = "Roman Babenko", email = "babenek@users.noreply.github.com" }]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = ["simpleaudio"]
 readme = "README.md"
 keywords = ["morse", "sound", "text"]

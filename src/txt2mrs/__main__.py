@@ -25,7 +25,7 @@ import contextlib
 import sys
 from typing import Optional
 
-from src.txt2mrs.txt2mrs import Txt2Mrs
+from txt2mrs import Txt2Mrs
 
 
 
