@@ -30,4 +30,3 @@ path = "src/txt2mrs/__init__.py"
 
 [project.scripts]
 txt2mrs = "txt2mrs.__main__:main"
-

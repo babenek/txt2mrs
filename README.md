@@ -1,4 +1,7 @@
 Text to morse sound
 ===================
 
-stdin use
+The toy converts a text from STDIN to text and sound morse code.
+
+**How to install:
+``pip install txt2mrs``
