@@ -148,12 +148,12 @@ class Txt2Mrs:
         combined_wave = array.array('h', [])
 
         if self.WHITESPACE_PATTERN.match(sign):
-            print(char_ord, sign, '?')  # dbg
+            print('   ',end='',flush=True)
             if self.signal:
                 time.sleep(self.space_duration)
             self.signal = False
         elif code := self.code.get(sign):
-            print(char_ord, sign, code)  # dbg
+            print(code, end=' ',flush=True)  # dbg
             for i in code:
                 if combined_wave:
                     combined_wave += self.dot_silence
@@ -167,7 +167,7 @@ class Txt2Mrs:
             # Play the combined waveform
             sa.play_buffer(combined_wave, num_channels=1, bytes_per_sample=2, sample_rate=self.sample_rate).wait_done()
         else:
-            print(char_ord, sign, '?')  # dbg
+            print('\t',end=' ',flush=True)  # dbg
             time.sleep(self.space_duration)
             self.signal = False
         # combined_wave += self.dash_silence

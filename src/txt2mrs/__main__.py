@@ -53,19 +53,21 @@ def main() -> int:
 
     txt2mrs = Txt2Mrs(speed, tone)
 
-    if get_int(sys.argv[-1]) and 4 > len(sys.argv):
+    if '-' == sys.argv[-1] and 4 >=len(sys.argv):
         try:
             for line in sys.stdin:
-                print(f'Input : {line}')
-        except KeyboardInterrupt as sigint:
+                for i in line:
+                    txt2mrs.morse(ord(i))
+                print("\n")
+        except KeyboardInterrupt:
             error = 0
     else:
         message = sys.argv[-1]
-        print(f'message : {message}')
+        print(f"message : '{message}'")
+        start_time = datetime.datetime.now()
         for i in message:
-            old = datetime.datetime.now()
             txt2mrs.morse(ord(i))
-            print((datetime.datetime.now() - old).total_seconds())
+        print(f"\ntotal time:{(datetime.datetime.now() - start_time).total_seconds()} seconds")
         error = 0
 
     if 0 != error:
