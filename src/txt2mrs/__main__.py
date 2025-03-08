@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import contextlib
+import datetime
 import sys
 from typing import Optional
 
@@ -62,7 +63,9 @@ def main() -> int:
         message = sys.argv[-1]
         print(f'message : {message}')
         for i in message:
+            old = datetime.datetime.now()
             txt2mrs.morse(ord(i))
+            print((datetime.datetime.now() - old).total_seconds())
         error = 0
 
     if 0 != error:

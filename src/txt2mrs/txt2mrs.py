@@ -24,6 +24,7 @@ SOFTWARE.
 import array
 import math
 import re
+import time
 
 import simpleaudio as sa
 
@@ -114,21 +115,22 @@ class Txt2Mrs:
     WHITESPACE_PATTERN = re.compile(r"\s")
 
     def __init__(self, speed: int, frequency: int, sample_rate=44100, amplitude=32767):
+        self.signal = None
         self.sample_rate = sample_rate
-        dot_duration = speed / 1000
-        dash_duration = speed / 333
+        self.dot_duration = speed / 1000
+        self.space_duration = 7 * speed / 1000
+        self.dash_duration = speed / 333
         self.dot_wave = array.array(
             'h',
             (int(amplitude * math.sin(2 * math.pi * frequency * t / sample_rate)) for t in
-             range(int(sample_rate * dot_duration)))
+             range(int(sample_rate * self.dot_duration)))
         )
-        self.dot_silence = array.array('h', (0 for _ in range(int(sample_rate * dot_duration))))
+        self.dot_silence = array.array('h', (0 for _ in range(int(sample_rate * self.dot_duration))))
         self.dash_wave = array.array(
             'h',
             (int(amplitude * math.sin(2 * math.pi * frequency * t / sample_rate)) for t in
-             range(int(sample_rate * dash_duration)))
+             range(int(sample_rate * self.dash_duration)))
         )
-        self.dash_silence = array.array('h', (0 for _ in range(int(sample_rate * dash_duration))))
 
         self.code = {}
         for x, y in self.MORSE.items():
@@ -144,10 +146,14 @@ class Txt2Mrs:
         """
         sign = chr(char_ord)
         combined_wave = array.array('h', [])
+
         if self.WHITESPACE_PATTERN.match(sign):
-            combined_wave += self.dash_silence + self.dot_silence
-            print(char_ord, sign, ' ')  # dbg
+            print(char_ord, sign, '?')  # dbg
+            if self.signal:
+                time.sleep(self.space_duration)
+            self.signal = False
         elif code := self.code.get(sign):
+            print(char_ord, sign, code)  # dbg
             for i in code:
                 if combined_wave:
                     combined_wave += self.dot_silence
@@ -155,10 +161,13 @@ class Txt2Mrs:
                     combined_wave += self.dot_wave
                 elif '-' == i:
                     combined_wave += self.dash_wave
-            print(char_ord, sign, code)  # dbg
+            if self.signal:
+                time.sleep(self.dash_duration)
+            self.signal = True
+            # Play the combined waveform
+            sa.play_buffer(combined_wave, num_channels=1, bytes_per_sample=2, sample_rate=self.sample_rate).wait_done()
         else:
             print(char_ord, sign, '?')  # dbg
-        combined_wave += self.dash_silence
-
-        # Play the combined waveform
-        sa.play_buffer(combined_wave, num_channels=1, bytes_per_sample=2, sample_rate=self.sample_rate).wait_done()
+            time.sleep(self.space_duration)
+            self.signal = False
+        # combined_wave += self.dash_silence
