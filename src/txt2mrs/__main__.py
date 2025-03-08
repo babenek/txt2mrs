@@ -53,25 +53,25 @@ def main() -> int:
 
     txt2mrs = Txt2Mrs(speed, tone)
 
-    if '-' == sys.argv[-1] and 4 >=len(sys.argv):
+    if '-' == sys.argv[-1] and 4 >= len(sys.argv):
         try:
             for line in sys.stdin:
                 for i in line:
                     txt2mrs.morse(ord(i))
                 print("\n")
         except KeyboardInterrupt:
-            error = 0
-    else:
+            pass
+        error = 0
+    elif 1 < len(sys.argv) <= 5:
         message = sys.argv[-1]
         print(f"message : '{message}'")
         start_time = datetime.datetime.now()
         for i in message:
             txt2mrs.morse(ord(i))
-        print(f"\ntotal time:{(datetime.datetime.now() - start_time).total_seconds()} seconds")
+        print(f"\ntotal time : {(datetime.datetime.now() - start_time).total_seconds()} seconds")
         error = 0
-
-    if 0 != error:
-        print("txt2mrs <speed> <tone> [message]")
+    else:
+        print("txt2mrs <speed> <tone> [ 'message' | - ]")
     return error
 
 
